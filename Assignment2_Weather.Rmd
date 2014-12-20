@@ -8,6 +8,11 @@ This R Markdown document was created for Peer Assignment 2 for the COursera clas
 
 # Synopsis
 
+This report utilizes theU.S. National Oceanic and Atmospheric Administration’s (NOAA) storm database to analyze some characteritics of major weather-related events. After analyzing these data we found the following important characteristics:
+
+1) Across the US Tornado is by far the most dangerous weather-related event causing the most injuries and fatalities. The next most dangerous events are Heat, Flood, and Lightning in that order.
+
+2) Across the US the most economically damaging weather-related event (as it relates to both property and crop damage) is Flooding. The next most economically impactful events are Hurricane, Tornado, and Storm Surge in that order. 
 
 
 ## Processing the Data
@@ -23,7 +28,7 @@ Additional data processing is described where appropriate in the Results section
 
 #Results
 
-##Most Hardful Weather-Related Events
+##Most Harmful Weather-Related Events
 
 The first question we need to answer using these data is:
 
@@ -81,6 +86,7 @@ weather_data$CROPDMGEXP <- sub("[Hh]", "100",weather_data$CROPDMGEXP)
 weather_data$CROPDMGEXP <- sub("[Kk]", "1000",weather_data$CROPDMGEXP)
 weather_data$CROPDMGEXP <- sub("[Mm]", "1000000",weather_data$CROPDMGEXP)
 weather_data$CROPDMGEXP <- sub("[Bb]", "1000000000",weather_data$CROPDMGEXP)
+weather_data$CROPDMGEXP <- sub("^$|[-?+]", "0",weather_data$CROPDMGEXP)
 
 
 #Subsitute PROPDMGEXP with corresponding numerical value
@@ -88,6 +94,7 @@ weather_data$PROPDMGEXP <- sub("[Hh]", "100",weather_data$PROPDMGEXP)
 weather_data$PROPDMGEXP <- sub("[Kk]", "1000",weather_data$PROPDMGEXP)
 weather_data$PROPDMGEXP <- sub("[Mm]", "1000000",weather_data$PROPDMGEXP)
 weather_data$PROPDMGEXP <- sub("[Bb]", "1000000000",weather_data$PROPDMGEXP)
+weather_data$PROPDMGEXP <- sub("^$|[-?+]", "0",weather_data$PROPDMGEXP)
 
 #convert to numeric
 weather_data$CROPDMGEXP <- as.numeric(weather_data$CROPDMGEXP)
@@ -113,5 +120,13 @@ top_10_total_damage
 Next we will create a bar plot illustrating the top 10 most economically impactful weather-related events. 
 
 ```{r}
-barplot(top_10_total_damage$x, names.arg=top_10_total_damage$Event, ylab="Total Economic Damage", main="Weather-Related Events with the Highest Economic Impact", las=3, cex.names=0.45)
+barplot(top_10_total_damage$x, names.arg=top_10_total_damage$Event, ylab="Total Economic Damage", main="Weather-Related Events with the Highest Economic Impact", las=3, col="red", cex.names=0.45)
 ```
+
+As we can see from the chart above, the top 5 most economically damaging events are as follows:
+
+1) Flood
+2) Hurricane
+3) Tornado
+4) Storm Surge
+5) Hail
