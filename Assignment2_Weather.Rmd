@@ -49,6 +49,5 @@ Now, having found the top 10 most dangerous weather events (by injuries and fata
 
 ```{r}
 par(mfrow=c(1,2))
-hist(top_10_total_injuries$Event)
-hist(top_10_total_fatalities$Event)
+hist(top_10_total_fatalities$x)
 ```
