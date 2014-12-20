@@ -30,7 +30,7 @@ To answer this question we must utilize the EVTYPE variable to determine the num
 First we will aggregate the total number of injuries by event type, choosing the top 10.
 
 ```{r}
-total_injuries <- aggregate(weather_data$INJURIES, list(Event_Type = weather_data$EVTYPE), sum)
+total_injuries <- aggregate(weather_data$INJURIES, list(Event = weather_data$EVTYPE), sum)
 top_total_injuries <- total_injuries[order(total_injuries$x, decreasing=TRUE), ]
 top_10_total_injuries <- head(top_total_injuries, 10)
 top_10_total_injuries
@@ -39,7 +39,7 @@ top_10_total_injuries
 Do the same for The total number of fatalities by event type, choosing the top 10. 
 
 ```{r}
-total_fatalities <- aggregate(weather_data$FATALITIES, list(Event_Type = weather_data$EVTYPE), sum)
+total_fatalities <- aggregate(weather_data$FATALITIES, list(Event = weather_data$EVTYPE), sum)
 top_total_fatalities <- total_fatalities[order(total_fatalities$x, decreasing=TRUE), ]
 top_10_total_fatalities <- head(top_total_fatalities, 10)
 top_10_total_fatalities
@@ -49,6 +49,6 @@ Now, having found the top 10 most dangerous weather events (by injuries and fata
 
 ```{r}
 par(mfrow=c(1,2))
-barplot(top_10_total_injuries)
-barplot(top_10_total_fatalities)
+hist(top_10_total_injuries$Event)
+hist(top_10_total_fatalities$Event)
 ```
