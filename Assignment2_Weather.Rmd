@@ -1,0 +1,52 @@
+---
+title: "Peer Assignment 2"
+output: html_document
+---
+
+This R Markdown document was created for Peer Assignment 2 for the COursera class Reproducible Research.
+
+
+## Synopsis
+
+
+
+## Processing the Data
+
+The first step is to read the data ("repdata-data-StormData.csv") into R. The following code will acomplish this. Make sure that the data exists and is unzipped into your working directory. Once we read the data, we will also view the first few rows to get a sense of how the data is structured and make sure that it was read properly.
+
+```{r}
+weather_data <- read.table("repdata-data-StormData.csv", header=TRUE, sep=",")
+head(weather_data)
+```
+
+##Results
+
+The first question we need to answer using these data is:
+
+1. Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
+
+To answer this question we must utilize the EVTYPE variable to determine the number of fatailities and injuries per event type.
+
+First we will aggregate the total number of injuries by event type, choosing the top 10.
+
+```{r}
+total_injuries <- aggregate(weather_data$INJURIES, list(Event_Type = weather_data$EVTYPE), sum)
+top_total_injuries <- total_injuries[order(total_injuries$x, decreasing=TRUE), ]
+top_10_total_injuries <- head(top_total_injuries, 10)
+top_10_total_injuries
+```
+
+Do the same for The total number of fatalities by event type, choosing the top 10. 
+
+```{r}
+total_fatalities <- aggregate(weather_data$FATALITIES, list(Event_Type = weather_data$EVTYPE), sum)
+top_total_fatalities <- total_fatalities[order(total_fatalities$x, decreasing=TRUE), ]
+top_10_total_fatalities <- head(top_total_fatalities, 10)
+top_10_total_fatalities
+```
+
+Now, having found the top 10 most dangerous weather events (by injuries and fatalities) we can make two bar charts to better visualize the data.
+
+```{r}
+
+```
