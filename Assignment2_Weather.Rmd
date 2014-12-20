@@ -48,6 +48,8 @@ top_10_total_fatalities
 Now, having found the top 10 most dangerous weather events (by injuries and fatalities) we can make two bar charts to better visualize the data.
 
 ```{r}
-par(mfrow=c(1,2))
-hist(top_10_total_fatalities$x)
+#par(mfrow=c(1,2))
+stacked <- table(top_10_total_injuries$x, top_10_total_fatalities$x)
+barplot(stacked, main="Top 10 Events by Total Injuries", ylab="Total Number of Weather-Related Injuries", col="blue", legend=rownames(stacked))
+#barplot(top_10_total_injuries$x, names.arg=top_10_total_injuries$Event, main="Top 10 Events by Total Injuries", ylab="Total Number of Weather-Related Injuries", col="blue")
 ```
