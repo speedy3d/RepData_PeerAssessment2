@@ -71,23 +71,42 @@ The second question that we need to answer is:
 
 2) Across the United States, which types of events have the greatest economic consequences?
 
-We can determine the level of economic impact for various weather-related events by examining the variables related to property damage (PROPDMG) as well as crop damage (CROPDMG) within the original dataset. Additional variables used were PROPDMGEXP and CROPDMBGEXP which include exponent of the value in the preceeding variable. For example, "K" correspondes to 1000.
+We can determine the level of economic impact for various weather-related events by examining the variables related to property damage (PROPDMG) as well as crop damage (CROPDMG) within the original dataset. Additional variables used were PROPDMGEXP and CROPDMGEXP which include exponent of the value in the preceeding variable. For example, "K" correspondes to 1000.
 
-First we need to clean the exponent values and replace them with the proper value. Some values had characters and other were lower or upper case. 
+First we need to clean the exponent values and replace them with the proper value. Some values had characters and other were lower or upper case. Others had strange characters (e.g. ?).
 
 ```{r}
 #Subsitute CROPDMBGEXP with corresponding numerical value
-
+weather_data$CROPDMGEXP <- sub("[Hh]", "100",weather_data$CROPDMGEXP)
+weather_data$CROPDMGEXP <- sub("[Kk]", "1000",weather_data$CROPDMGEXP)
+weather_data$CROPDMGEXP <- sub("[Mm]", "1000000",weather_data$CROPDMGEXP)
+weather_data$CROPDMGEXP <- sub("[Bb]", "1000000000",weather_data$CROPDMGEXP)
 
 
 #Subsitute PROPDMGEXP with corresponding numerical value
-weather_data$PROPDMGEXP <- sub("^$|[-?+]", "0",weather_data$PROPDMGEXP)
 weather_data$PROPDMGEXP <- sub("[Hh]", "100",weather_data$PROPDMGEXP)
 weather_data$PROPDMGEXP <- sub("[Kk]", "1000",weather_data$PROPDMGEXP)
 weather_data$PROPDMGEXP <- sub("[Mm]", "1000000",weather_data$PROPDMGEXP)
 weather_data$PROPDMGEXP <- sub("[Bb]", "1000000000",weather_data$PROPDMGEXP)
+#weather_data$PROPDMGEXP <- sub("^$|[-?+]", "0",weather_data$PROPDMGEXP)
+
+#convert to numeric
+weather_data$CROPDMGEXP <- as.numeric(weather_data$CROPDMGEXP)
+weather_data$PROPDMGEXP <- as.numeric(weather_data$PROPDMGEXP)
 ```
 
+Now we need to multiply both the PROPDMG and CROPDMG by their respective (now cleaned) exponent values.
 
+```{r}
+weather_data$CROPDMG <- weather_data$CROPDMG*weather_data$CROPDMGEXP
+weather_data$PROPDMG <- weather_data$PROPDMG*weather_data$PROPDMGEXP
+```
 
-#Conclusion
+We will now get the aggregate sum of both the CROPDMG and PROPDMG values to get a true value of the total amount of economic damage by each event type. We will again get the top 10.
+
+```{r}
+total_damage <- aggregate(weather_data$CROPDMG+weather_data$PROPDMG, list(Event=weather_data$EVTYPE), sum)
+top_total_damage <- total_damage[order(total_damage$x, decreasing=TRUE), ]
+top_10_total_damage <- head(top_total_damage, 10)
+top_10_total_damage
+```

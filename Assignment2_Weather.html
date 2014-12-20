@@ -56,9 +56,8 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 <p>This R Markdown document was created for Peer Assignment 2 for the COursera class Reproducible Research.</p>
-<div id="synopsis" class="section level2">
-<h2>Synopsis</h2>
-</div>
+<div id="synopsis" class="section level1">
+<h1>Synopsis</h1>
 <div id="processing-the-data" class="section level2">
 <h2>Processing the Data</h2>
 <p>The first step is to read the data (“repdata-data-StormData.csv”) into R. The following code will acomplish this. Make sure that the data exists and is unzipped into your working directory. Once we read the data, we will also view the first few rows to get a sense of how the data is structured and make sure that it was read properly.</p>
@@ -99,12 +98,13 @@ head(weather_data)</code></pre>
 ## 4     3458      8626          0          0              4
 ## 5     3412      8642          0          0              5
 ## 6     3450      8748          0          0              6</code></pre>
+<p>Additional data processing is described where appropriate in the Results section below.</p>
 </div>
-<div id="results" class="section level2">
-<h2>Results</h2>
 </div>
-<div id="most-hardful-weather-related-events" class="section level1">
-<h1>Most Hardful Weather-Related Events</h1>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<div id="most-hardful-weather-related-events" class="section level2">
+<h2>Most Hardful Weather-Related Events</h2>
 <p>The first question we need to answer using these data is:</p>
 <ol style="list-style-type: decimal">
 <li>Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?</li>
@@ -155,6 +155,54 @@ barplot(top_10_total_fatalities$x, names.arg=top_10_total_fatalities$Event, cex.
 <li>Lightning</li>
 <li>wind-related Events</li>
 </ol>
+</div>
+<div id="weather-related-events-with-the-greatest-economic-consequences" class="section level2">
+<h2>Weather-Related Events with the Greatest Economic Consequences</h2>
+<p>The second question that we need to answer is:</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Across the United States, which types of events have the greatest economic consequences?</li>
+</ol>
+<p>We can determine the level of economic impact for various weather-related events by examining the variables related to property damage (PROPDMG) as well as crop damage (CROPDMG) within the original dataset. Additional variables used were PROPDMGEXP and CROPDMGEXP which include exponent of the value in the preceeding variable. For example, “K” correspondes to 1000.</p>
+<p>First we need to clean the exponent values and replace them with the proper value. Some values had characters and other were lower or upper case. Others had strange characters (e.g. ?).</p>
+<pre class="r"><code>#Subsitute CROPDMBGEXP with corresponding numerical value
+weather_data$CROPDMGEXP &lt;- sub(&quot;[Hh]&quot;, &quot;100&quot;,weather_data$CROPDMGEXP)
+weather_data$CROPDMGEXP &lt;- sub(&quot;[Kk]&quot;, &quot;1000&quot;,weather_data$CROPDMGEXP)
+weather_data$CROPDMGEXP &lt;- sub(&quot;[Mm]&quot;, &quot;1000000&quot;,weather_data$CROPDMGEXP)
+weather_data$CROPDMGEXP &lt;- sub(&quot;[Bb]&quot;, &quot;1000000000&quot;,weather_data$CROPDMGEXP)
+
+
+#Subsitute PROPDMGEXP with corresponding numerical value
+weather_data$PROPDMGEXP &lt;- sub(&quot;[Hh]&quot;, &quot;100&quot;,weather_data$PROPDMGEXP)
+weather_data$PROPDMGEXP &lt;- sub(&quot;[Kk]&quot;, &quot;1000&quot;,weather_data$PROPDMGEXP)
+weather_data$PROPDMGEXP &lt;- sub(&quot;[Mm]&quot;, &quot;1000000&quot;,weather_data$PROPDMGEXP)
+weather_data$PROPDMGEXP &lt;- sub(&quot;[Bb]&quot;, &quot;1000000000&quot;,weather_data$PROPDMGEXP)
+#weather_data$PROPDMGEXP &lt;- sub(&quot;^$|[-?+]&quot;, &quot;0&quot;,weather_data$PROPDMGEXP)
+
+#convert to numeric
+weather_data$CROPDMGEXP &lt;- as.numeric(weather_data$CROPDMGEXP)</code></pre>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>weather_data$PROPDMGEXP &lt;- as.numeric(weather_data$PROPDMGEXP)</code></pre>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<p>Now we need to multiply both the PROPDMG and CROPDMG by their respective (now cleaned) exponent values.</p>
+<pre class="r"><code>weather_data$CROPDMG &lt;- weather_data$CROPDMG*weather_data$CROPDMGEXP
+weather_data$PROPDMG &lt;- weather_data$PROPDMG*weather_data$PROPDMGEXP</code></pre>
+<p>We will now get the aggregate sum of both the CROPDMG and PROPDMG values to get a true value of the total amount of economic damage by each event type. We will again get the top 10.</p>
+<pre class="r"><code>total_damage &lt;- aggregate(weather_data$CROPDMG+weather_data$PROPDMG, list(Event=weather_data$EVTYPE), sum)
+top_total_damage &lt;- total_damage[order(total_damage$x, decreasing=TRUE), ]
+top_10_total_damage &lt;- head(top_total_damage, 10)
+top_10_total_damage</code></pre>
+<pre><code>##                             Event          x
+## 842    TORNADOES, TSTM WIND, HAIL 1602500000
+## 392               HIGH WINDS/COLD  117500000
+## 410     HURRICANE OPAL/HIGH WINDS  110000000
+## 973       WINTER STORM HIGH WINDS   65000000
+## 295          Heavy Rain/High Surf   15000000
+## 441               LAKESHORE FLOOD    7540000
+## 389        HIGH WINDS HEAVY RAINS    7510000
+## 190                  FOREST FIRES    5500000
+## 165          FLASH FLOODING/FLOOD    1925000
+## 329 HEAVY SNOW/HIGH WINDS &amp; FLOOD    1520000</code></pre>
+</div>
 </div>
 
 
