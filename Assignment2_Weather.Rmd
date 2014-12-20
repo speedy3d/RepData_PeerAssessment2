@@ -6,7 +6,7 @@ output: html_document
 This R Markdown document was created for Peer Assignment 2 for the COursera class Reproducible Research.
 
 
-## Synopsis
+# Synopsis
 
 
 
@@ -19,9 +19,9 @@ weather_data <- read.table("repdata-data-StormData.csv", header=TRUE, sep=",")
 head(weather_data)
 ```
 
-##Results
+#Results
 
-#Most Hardful Weather-Related Events
+##Most Hardful Weather-Related Events
 
 The first question we need to answer using these data is:
 
@@ -63,3 +63,10 @@ Referencing these three charts we can see that the top 5 most harmful weather-re
 4) Lightning 
 5) wind-related Events
 
+##Weather-Related Events with the Greatest Economic Consequences
+
+The second question that we need to answer is:
+
+2) Across the United States, which types of events have the greatest economic consequences?
+
+We can determine the level of economic impact for various weather-related events by examining the variables related to property damage (PROPDMG) as well as crop damage (CROPDMG) within the original dataset. 
