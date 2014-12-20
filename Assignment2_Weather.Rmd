@@ -16,7 +16,7 @@ The first step is to read the data ("repdata-data-StormData.csv") into R. The fo
 
 ```{r}
 weather_data <- read.table("repdata-data-StormData.csv", header=TRUE, sep=",")
-head(weather_data)
+head(weather_data, 3)
 ```
 
 Additional data processing is described where appropriate in the Results section below. 
@@ -88,7 +88,6 @@ weather_data$PROPDMGEXP <- sub("[Hh]", "100",weather_data$PROPDMGEXP)
 weather_data$PROPDMGEXP <- sub("[Kk]", "1000",weather_data$PROPDMGEXP)
 weather_data$PROPDMGEXP <- sub("[Mm]", "1000000",weather_data$PROPDMGEXP)
 weather_data$PROPDMGEXP <- sub("[Bb]", "1000000000",weather_data$PROPDMGEXP)
-#weather_data$PROPDMGEXP <- sub("^$|[-?+]", "0",weather_data$PROPDMGEXP)
 
 #convert to numeric
 weather_data$CROPDMGEXP <- as.numeric(weather_data$CROPDMGEXP)
@@ -109,4 +108,10 @@ total_damage <- aggregate(weather_data$CROPDMG+weather_data$PROPDMG, list(Event=
 top_total_damage <- total_damage[order(total_damage$x, decreasing=TRUE), ]
 top_10_total_damage <- head(top_total_damage, 10)
 top_10_total_damage
+```
+
+Next we will create a bar plot illustrating the top 10 most economically impactful weather-related events. 
+
+```{r}
+barplot(top_10_total_damage$x, names.arg=top_10_total_damage$Event, ylab="Total Economic Damage", main="Weather-Related Events with the Highest Economic Impact", las=3, cex.names=0.45)
 ```
