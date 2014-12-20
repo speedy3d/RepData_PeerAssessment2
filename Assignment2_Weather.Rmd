@@ -21,6 +21,8 @@ head(weather_data)
 
 ##Results
 
+#Most Hardful Weather-Related Events
+
 The first question we need to answer using these data is:
 
 1. Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
@@ -45,11 +47,19 @@ top_10_total_fatalities <- head(top_total_fatalities, 10)
 top_10_total_fatalities
 ```
 
-Now, having found the top 10 most dangerous weather events (by injuries and fatalities) we can make two bar charts to better visualize the data.
+Now, having found the top 10 most dangerous weather events (by injuries and fatalities) we can make two bar charts to better visualize the data. 
 
 ```{r}
-#par(mfrow=c(1,2))
-stacked <- table(top_10_total_injuries$x, top_10_total_fatalities$x)
-barplot(stacked, main="Top 10 Events by Total Injuries", ylab="Total Number of Weather-Related Injuries", col="blue", legend=rownames(stacked))
-#barplot(top_10_total_injuries$x, names.arg=top_10_total_injuries$Event, main="Top 10 Events by Total Injuries", ylab="Total Number of Weather-Related Injuries", col="blue")
+par(mfrow=c(1,2))
+barplot(top_10_total_injuries$x, names.arg=top_10_total_injuries$Event, cex.names=0.45, las=3, main="Top 10 Events by Total Injuries", ylab="Total Number of Weather-Related Injuries", col="blue")
+barplot(top_10_total_fatalities$x, names.arg=top_10_total_fatalities$Event, cex.names=0.45, las=3, main="Top 10 Events by Total Fatalities", ylab="Total Number of Weather-Related Fatalities", col="red")
 ```
+
+Referencing these three charts we can see that the top 5 most harmful weather-related events are:
+
+1) Tornado
+2) Heat
+3) Flood
+4) Lightning 
+5) wind-related Events
+
